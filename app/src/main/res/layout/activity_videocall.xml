@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/rl_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#36393c"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/my_rel_frag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <RelativeLayout
+                    android:id="@+id/remote_video_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <org.webrtc.SurfaceViewRenderer
+                        android:id="@+id/remote_video_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/remote_video_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="32dp"
+                    android:ellipsize="end"
+                    android:gravity="bottom"
+                    android:lines="1"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_13" />
+            </FrameLayout>
+
+            <com.example.zjf.mqtt.view.PercentFrameLayout
+                android:id="@+id/local_video_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <org.webrtc.SurfaceViewRenderer
+                    android:id="@+id/local_video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </com.example.zjf.mqtt.view.PercentFrameLayout>
+
+            <FrameLayout
+                android:id="@+id/fragmet_local"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="15dp">
+
+                <RelativeLayout
+                    android:id="@+id/local_video_layout_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/local_video_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:ellipsize="end"
+                    android:gravity="bottom"
+                    android:lines="1"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_13" />
+            </FrameLayout>
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/iv_call_out_hangup"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp"
+            android:src="@mipmap/pic_hangup" />
+
+        <TextView
+            android:id="@+id/tv_call_out_hangup"
+            android:layout_width="66dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:text="@string/hang_out"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_16" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/iv_call_out_hangup"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/is_switched"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/sp_22" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_call_in_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="40dp">
+
+            <ImageView
+                android:id="@+id/iv_call_in_hangup"
+                android:layout_width="66dp"
+                android:layout_height="66dp"
+                android:src="@mipmap/pic_hangup" />
+
+            <ImageView
+                android:id="@+id/iv_call_in_accept"
+                android:layout_width="66dp"
+                android:layout_height="66dp"
+                android:layout_marginLeft="100dp"
+                android:src="@mipmap/pic_accept" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_call_in_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:id="@+id/tv_call_in_hangup"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/hang_out"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+
+            <TextView
+                android:id="@+id/tv_call_in_accept"
+                android:layout_width="66dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="100dp"
+                android:gravity="center"
+                android:text="@string/answer"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sp_16" />
+        </LinearLayout>
+
+        <Chronometer
+            android:id="@+id/chronometer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/iv_call_out_hangup"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:format="%s"
+            android:padding="4dp"
+            android:textColor="#ffffff"
+            android:textSize="@dimen/sp_20" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_monitor"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        />
+    <TextView
+        android:id="@+id/tv_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_15" />
+    <TextView
+        android:id="@+id/tv_lowWifi"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="bottom"
+        android:text="当前网络较差，可能影响通话质量"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        />
+</FrameLayout>

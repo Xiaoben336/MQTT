@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MQTT</string>
+    <string name="hang_out">挂断</string>
+    <string name="answer">接听</string>
+    <string name="is_switched">正在接通</string>
+    <string name="pref_speakerphone_key">speakerphone_preference</string>
+    <string name="pref_speakerphone_default">auto</string>
+    <string name="camera2_texture_only_error">Camera2 only supports capturing to texture. Either disable Camera2 or enable capturing to texture in the options.</string>
+</resources>

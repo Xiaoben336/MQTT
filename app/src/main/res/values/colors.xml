@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="background">#FFFFFF</color>
+    <color name="split_line">#11112233</color>
+    <color name="text1">#59B29C</color>
+    <color name="white">#ffffffff</color>
+
+    <color name="lightdeepskyblue">#57C5E8</color>
+    <!--深天蓝色 -->
+    <color name="deepskyblue">#00BFFF</color>
+    <color name="blue">#2D415D</color>
+    <!--蓝色 -->
+    <color name="lightBlue">#53bfbc</color>
+
+    <item name="gray_holo_dark" type="color">#ff464646</item>
+    <item name="gray_holo_light" type="color">#ffd0d0d0</item>
+
+    <color name="black54">#ff787878</color>
+    <!--黑色 -->
+    <color name="black87">#ff1b1b1b</color>
+    <color name="linghtgray">#BFBFBF</color>
+    <color name="lightgreen">#99CC33</color>
+    <color name="green">#00CC00</color>
+    <color name="orange">#FB7400</color>
+    <!--橙色-->
+    <color name="orange_press">#ffd16b00</color>
+
+    <color name="darkgray">#A9A9A9</color>
+    <!--暗灰色 -->
+
+    <color name="red">#FF0000</color>
+
+    <!--红色 -->
+
+    <color name="possible_result_points">#c0ffff00</color>
+
+    <color name="text_red">#ff2d52</color>
+
+    <!--取消按钮颜色-->
+    <color name="textColor_alert_button_cancel">#007aff</color>
+    <!--高亮按钮颜色-->
+    <color name="textColor_alert_button_destructive">#ff3b30</color>
+</resources>
