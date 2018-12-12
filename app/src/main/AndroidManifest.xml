@@ -42,8 +42,6 @@
 
         <activity android:name=".activity.HomeActivity"/>
         <activity android:name=".activity.SubscriberActivity"/>
-        <activity android:name=".activity.PublishActivity"/>
-        <activity android:name=".activity.ChatActivity"/>
         <activity android:name=".activity.VideoCallActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <service android:name="org.eclipse.paho.android.service.MqttService" />

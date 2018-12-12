@@ -3,7 +3,9 @@ package com.example.zjf.mqtt.listener;
 import android.content.Context;
 
 import com.example.zjf.mqtt.activity.VideoCallActivity;
+import com.example.zjf.mqtt.event.CallMessageEvent;
 import com.example.zjf.mqtt.event.OnAcceptMessageEvent;
+import com.example.zjf.mqtt.event.OnByeMessageEvent;
 import com.example.zjf.mqtt.event.OnConnectMessageEvent;
 import com.example.zjf.mqtt.event.OnInviteMessageEvent;
 import com.example.zjf.mqtt.mqtt.MqttUtils;
@@ -42,7 +44,7 @@ public class VideoCallCallBackListener implements VideoCallListener {
      */
     @Override
     public void onBye(String var1) {
-
+        EventBus.getDefault().post(new OnByeMessageEvent(var1));
     }
     /**
      * 对方正忙的回调

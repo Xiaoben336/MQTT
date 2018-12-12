@@ -17,19 +17,16 @@ import com.example.zjf.mqtt.mqtt.MqttUtils;
 import com.example.zjf.mqtt.util.PreferenceUtil;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
-    private Button btn_sub,btn_pub,btn_chat,btn_video_chat;
+    private Button btn_sub,btn_video_chat;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         setTitle("首页");
         btn_sub = (Button) findViewById(R.id.btn_sub);
-        btn_pub = (Button) findViewById(R.id.btn_pub);
-        btn_chat = (Button) findViewById(R.id.btn_chat);
+
         btn_video_chat = (Button) findViewById(R.id.btn_video_chat);
         btn_sub.setOnClickListener(this);
-        btn_pub.setOnClickListener(this);
-        btn_chat.setOnClickListener(this);
         btn_video_chat.setOnClickListener(this);
     }
 
@@ -38,12 +35,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.btn_sub:
                 SubscriberActivity.startActivity(HomeActivity.this);
-                break;
-            case R.id.btn_pub:
-                PublishActivity.startActivity(HomeActivity.this);
-                break;
-            case R.id.btn_chat:
-                ChatActivity.startActivity(HomeActivity.this);
                 break;
             case R.id.btn_video_chat:
                 alert_edit();

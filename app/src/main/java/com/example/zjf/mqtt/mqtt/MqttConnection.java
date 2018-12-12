@@ -41,9 +41,6 @@ public class MqttConnection {
         return client;
     }
 
-    public String getClientID() {
-        return clientID;
-    }
 
     public boolean isConnection(){
         return status == ConnectionStatus.CONNECTED;

@@ -99,6 +99,12 @@ public class WebRTCNotificationProcessImp implements NotificationProcessItf {
                 String s = json.getString("id");
                 IceCandidate iceCandidate = new IceCandidate(s,json.getInt("label"),json.getString("candidate"));
                 CallUtils.getInst().onRemoteIceCandidate(sendClientId,iceCandidate);
+            } else if (type.equals("bye")) {
+                if (CallUtils.getInst().isHangUp()) {
+                    return;
+                }
+                Log.d(TAG,"=============type === bye==========notification.getSendClientId()==" + notification.getSendClientId());
+                CallUtils.getInst().onChannelClose(notification.getSendClientId(),4);
             }
         } catch (JSONException e) {
             e.printStackTrace();

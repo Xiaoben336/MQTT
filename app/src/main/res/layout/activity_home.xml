@@ -16,23 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:textSize="23sp"
-        android:text="订阅"
-        />
-
-    <Button
-        android:id="@+id/btn_pub"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textSize="23sp"
-        android:text="发布"
-        />
-
-    <Button
-        android:id="@+id/btn_chat"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textSize="23sp"
-        android:text="群聊"
+        android:text="订阅主题"
         />
 
     <Button

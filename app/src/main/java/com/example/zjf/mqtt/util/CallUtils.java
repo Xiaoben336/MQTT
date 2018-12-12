@@ -25,6 +25,7 @@ import org.webrtc.PeerConnection;
 import org.webrtc.SessionDescription;
 import org.webrtc.SurfaceViewRenderer;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -66,6 +67,8 @@ public class CallUtils {
     private String friendClientId;//以呼叫方来说，接听方的ID，以接听方来说，呼叫方的ID
     private String sendClientId;
 
+    private String localTopic;//本地客户端的topci
+
     //存储保存下来的所有SDP
     public Map<String,SessionDescription> sdpMap = new HashMap<String, SessionDescription>();
     //存储保存下来的ICECandidate
@@ -104,6 +107,16 @@ public class CallUtils {
 
     public String getSendClientId() {
         return sendClientId;
+    }
+
+
+    public String getLocalTopic() {
+        localTopic = PreferenceUtils.getValue(context,"localClientId","");
+        return localTopic;
+    }
+
+    public void setLocalTopic(String localTopic) {
+        this.localTopic = localTopic;
     }
 
     /**
@@ -185,7 +198,7 @@ public class CallUtils {
                         false,
                         width,
                         height,
-                        13,
+                        15,
                         0,
                         "H264",
                         true,
@@ -501,6 +514,106 @@ public class CallUtils {
                 Log.d(TAG,"added RemoteIceCandidate === " + clientId);
                 if (peerConnectionClient != null) {
                     peerConnectionClient.addRemoteIceCandidate(clientId,iceCandidate);
+                }
+            }
+        });
+    }
+
+
+    public void hangUp(final String topic, final int tag){
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                setHangUp(true);
+                localCandidateList = null;
+                localSdp = null;
+                sendBye(topic);
+                if (sdpMap != null) {
+                    sdpMap.clear();
+                    sdpMap = null;
+                }
+
+                if (peerConnectionClient != null) {
+                    peerConnectionClient.close();
+                    peerConnectionClient = null;
+                }
+
+                if (iceServers != null) {
+                    iceServers.clear();
+                    iceServers = null;
+                }
+
+                isSending = false;
+
+                if (audioManager != null) {
+                    audioManager.stop();
+                    audioManager = null;
+                }
+
+                if (am != null) {
+                    am = null;
+                }
+
+                if (iceCandidateMap != null) {
+                    iceCandidateMap.clear();
+                    iceCandidateMap = null;
+                }
+
+                isPeerConnectionCreate = false;
+
+                if (rootEglBase != null) {
+                    rootEglBase.release();
+                    rootEglBase = null;
+                }
+
+                App.getInst().getVideoCallBack().onBye("");
+
+                disconnect();
+            }
+        });
+    }
+
+    private void disconnect() {
+        setConnected(false);
+        setInVideoCall(false);
+    }
+
+    private void sendBye(final String topic) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject json = new JSONObject();
+                jsonPut(json,"type","bye");
+                WebRtcNotification notification = new WebRtcNotification();
+                notification.setNotify_type(NotificationTypeDef.C2C_NOTIFY_TYPE_WEBRTC);
+                notification.setMsg(json.toString());
+                notification.setSendClientId(sendClientId);
+                if (friendClientId != null) {
+                    Log.d(TAG,"friendClientId != null");
+                    C2CMessageUtils.sendMessageByTopic(topic,notification);
+                }
+                Log.d(TAG,"sendBye : " + json.toString());
+            }
+        });
+    }
+
+
+    boolean byeFlag = false;
+    public void onChannelClose(final String clientId,int tag){
+        Log.d(TAG,"onChannelClose CLIENTID === " + clientId + "tag == " + tag);
+        byeFlag = false;
+
+        if (friendClientId != null && friendClientId == clientId){
+            byeFlag = true;
+        }
+
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (friendClientId == null && isConnected() == false && !isCallOutModel()) {
+                    hangUp(getLocalTopic(),1);
+                } else {
+                    hangUp(getLocalTopic(),3);
                 }
             }
         });

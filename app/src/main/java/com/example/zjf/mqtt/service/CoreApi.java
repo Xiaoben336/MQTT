@@ -27,6 +27,7 @@ import java.util.UUID;
 public class CoreApi extends Service {
     private static final String TAG = "CoreApi";
     public static CoreApi the_service_instance = null;
+    public static Context ctx;
     private static RtcItf rtcItf;
     public static boolean isReady(){
         return (the_service_instance != null);
@@ -48,6 +49,7 @@ public class CoreApi extends Service {
     }
 
     private void initCore(Context context) {
+        ctx = context;
         App.getInst().setContext(context);
         //webrtc
         setRtcItf(new RtcImp());
@@ -99,6 +101,12 @@ public class CoreApi extends Service {
         callpeer(topic,friendClientId,renderer);
     }
 
+    /**
+     *              呼叫方呼叫
+     * @param topic
+     * @param friendClientId
+     * @param renderer
+     */
     private static void callpeer(String topic,String friendClientId, SurfaceViewRenderer renderer) {
         CallUtils.getInst().setCallOutModel(true);
         CallUtils.getInst().setFriendClientId(friendClientId);
@@ -114,12 +122,30 @@ public class CoreApi extends Service {
     }
 
 
+    /**
+     *              接听方接听电话
+     * @param topic
+     * @param friendClientId
+     * @param renderer
+     */
     public static void acceptCall(String topic,String friendClientId,SurfaceViewRenderer renderer){
         acceptcall(topic,friendClientId,renderer);
     }
 
+    /**
+     *              接听方接听电话
+     * @param topic
+     * @param friendClientId
+     * @param renderer
+     */
     private static void acceptcall(String topic,String friendClientId, SurfaceViewRenderer renderer) {
         CallUtils.getInst().startCall(renderer,topic,friendClientId,false);
     }
 
+    /**
+     * 呼叫方挂断电话
+     */
+    public static void byeAll(String topic){
+        CallUtils.getInst().hangUp(topic,4);
+    }
 }

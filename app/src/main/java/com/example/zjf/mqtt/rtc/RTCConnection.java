@@ -10,6 +10,7 @@ import com.example.zjf.mqtt.App;
 import com.example.zjf.mqtt.MyApplication;
 import com.example.zjf.mqtt.R;
 import com.example.zjf.mqtt.activity.VideoCallActivity;
+import com.example.zjf.mqtt.service.CoreApi;
 import com.example.zjf.mqtt.util.CallUtils;
 import com.example.zjf.mqtt.util.PreferenceUtil;
 
@@ -494,7 +495,7 @@ public class RTCConnection {
 
     private boolean useCamera2() {
         try {
-            return false;/* Camera2Enumerator.isSupported(MyApplication.getApplication()) &&(MyApplication.getApplication().activityList<>).getIntent().getBooleanExtra(EXTRA_CAMERA2, false);*/
+            return Camera2Enumerator.isSupported(CoreApi.ctx) &&((Activity)CoreApi.ctx).getIntent().getBooleanExtra(EXTRA_CAMERA2, false);
         } catch (Exception e) {
             return false;
         }

@@ -6,8 +6,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -17,6 +21,7 @@ import com.example.zjf.mqtt.R;
 import com.example.zjf.mqtt.bean.IceServerInfo;
 import com.example.zjf.mqtt.event.OnAcceptMessageEvent;
 
+import com.example.zjf.mqtt.event.OnByeMessageEvent;
 import com.example.zjf.mqtt.event.OnConnectMessageEvent;
 import com.example.zjf.mqtt.notification.common.IceServer;
 import com.example.zjf.mqtt.service.CoreApi;
@@ -56,6 +61,8 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
     private PercentFrameLayout localRenderLayout;//本地视频
     private SurfaceViewRenderer localRender;//本地视频的SurfaceViewRenderer
 
+    private RelativeLayout local_video_layout_2;
+    private TextView local_video_name;//本地视频的名字
     //呼叫方的挂断按钮和挂断文字
     private ImageView iv_call_out_hangup;
     private TextView tv_call_out_hangup;
@@ -91,11 +98,11 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
         iv_call_out_hangup.setOnClickListener(this);
         iv_call_in_hangup.setOnClickListener(this);
         iv_call_in_accept.setOnClickListener(this);
-
+        updateVideoView();
         /*remoteClientId = PreferenceUtils.getValue(context,"remoteClientId","");*/
         Log.d(TAG,"localClientId === " + localClientId +"   friendClientId === " + friendClientId);
         topic = localClientId;
-        CoreApi.initCall(this,720,1280,localRender);
+        CoreApi.initCall(this,240,320,localRender);
         if (isCallOut) {
             startCall();
         } else {
@@ -113,7 +120,7 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
                     @Override
                     public void call(Boolean aBoolean) {
                         if (aBoolean) {
-
+                            Log.d(TAG,"请求权限成功");
                         } else {
 
                         }
@@ -121,8 +128,12 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
                 });
     }
 
+    boolean iscall = false;
     private void startCall() {
         Log.d(TAG,"private void startCall()  TOPIC : friendClientId === " + topic + " : " + friendClientId);
+        if (iscall) return;
+
+        iscall = true;
 
         CoreApi.inviteCall(topic,friendClientId,remoteRender);
         //CallUtils.getInst().startCall(remoteRender,topic,localClientId,true);
@@ -138,7 +149,7 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onStop() {
         super.onStop();
-
+        finish();
         EventBus.getDefault().unregister(this);
     }
 
@@ -167,6 +178,9 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
         localRenderLayout = (PercentFrameLayout) findViewById(R.id.local_video_layout);
         localRender = (SurfaceViewRenderer) findViewById(R.id.local_video_view);
 
+        local_video_layout_2 = (RelativeLayout) findViewById(R.id.local_video_layout_2);
+        local_video_name = (TextView) findViewById(R.id.local_video_name);
+
         iv_call_out_hangup = (ImageView) findViewById(R.id.iv_call_out_hangup);
         tv_call_out_hangup = (TextView) findViewById(R.id.tv_call_out_hangup);
 
@@ -183,8 +197,6 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
         tv_monitor = (TextView) findViewById(R.id.tv_monitor);
         tv_tips = (TextView) findViewById(R.id.tv_tips);
         tv_lowWifi = (TextView) findViewById(R.id.tv_lowWifi);
-
-        updateVideoView();
 
         if (isCallOut) {//呼出
             Log.d(TAG,"呼出");
@@ -241,12 +253,31 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
         this.getConnect(messageEvent.getTopic());
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBye(OnByeMessageEvent messageEvent){
+        Log.d(TAG,"onBye");
+        this.getBye(messageEvent.getMessage());
+    }
 
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onInvite(OnInviteMessageEvent messageEvent){
-        Log.d(TAG,"onInvite");
-        this.getInvite(messageEvent.getMessage());
-    }*/
+    private void getBye(String message) {
+        Log.d(TAG," getBye  message === " + message);
+        if (message.equals("")) {
+            iscall = false;
+            tv_tips.setText("当前通话结束");
+
+            if (localRender != null) {
+                localRender.release();
+                localRender = null;
+            }
+
+            if (remoteRender != null) {
+                remoteRender.release();
+                remoteRender = null;
+            }
+
+            finish();
+        }
+    }
 
     private void getAccept(String message) {
         tv_status.setText(message +"已接听，正在接通电话");
@@ -258,7 +289,6 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void updateVideoView(){
-
         if (CallUtils.getInst().getFriendClientId() != null) {
             Log.d(TAG,"updateVideoView === ");
             remoteRender.setScalingType(scalingType);
@@ -273,29 +303,62 @@ public class VideoCallActivity extends AppCompatActivity implements View.OnClick
         }
         Log.d(TAG,"iceConnected === " + iceConnected);
         if (iceConnected) {
+            if (localRenderLayout.getChildCount() != 0) {
+                ((PercentFrameLayout)localRender.getParent()).removeAllViews();
+                FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) local_video_layout_2.getLayoutParams();
+                int screenWidth = getScreenWidth(this);
+                int screenHeight = getScreenHeight(this);
+                int actual = screenWidth > screenHeight ? screenHeight : screenWidth;
+                lp.height = (int) (actual /4.0f);
+                lp.width = (int) (actual / 4.0f);
 
+                local_video_layout_2.setLayoutParams(lp);
+                local_video_layout_2.addView(localRender);
+
+                lp = new FrameLayout.LayoutParams((int) (actual / 4.0f),FrameLayout.LayoutParams.WRAP_CONTENT);
+                lp.gravity = Gravity.BOTTOM;
+                local_video_name.setLayoutParams(lp);
+            }
             localRender.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
             if (remoteVideoName != null) {
-                remoteVideoName.setText(localClientId+"随便吧");
+                remoteVideoName.setText(CallUtils.getInst().getFriendClientId());
             }
 
+            if (local_video_name != null) {
+                local_video_name.setText(localClientId);
+            }
         } else {
             localRenderLayout.setPosition(0,0,150,250);
-            localRender.setScalingType(RendererCommon.ScalingType.SCALE_ASPECT_FILL);
+            localRender.setScalingType(scalingType);
         }
-
         localRender.setMirror(false);
         localRender.requestLayout();
+    }
+
+    private int getScreenWidth(Context context) {
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+        return display.getWidth();
+    }
+
+    //获取屏幕的高度
+    private int getScreenHeight(Context context) {
+        WindowManager manager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = manager.getDefaultDisplay();
+        return display.getHeight();
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_call_out_hangup:
-
+                    Log.d(TAG,"iv_call_out_hangup一直发");
+                    CoreApi.byeAll(topic);
+                    finish();
                 break;
             case R.id.iv_call_in_hangup:
-
+                    Log.d(TAG,"iv_call_in_hangup一直发");
+                    CoreApi.byeAll(topic);
                 break;
             case R.id.iv_call_in_accept:
                 accept();

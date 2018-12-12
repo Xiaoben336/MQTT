@@ -11,7 +11,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zjf.mqtt.R;
-import com.example.zjf.mqtt.activity.PublishActivity;
 import com.example.zjf.mqtt.bean.Message;
 
 import java.util.List;
